@@ -156,12 +156,7 @@ module MethodCache
   private
 
     def expiry(value)
-      value = dynamic_opt(:expiry, value).to_i
-      if defined?(Memcache) and cache.kind_of?(Memcache)
-        {:expiry => value}
-      else
-        value
-      end
+      dynamic_opt(:expiry, value).to_i
     end
 
     def valid?(type, value)
