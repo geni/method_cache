@@ -115,7 +115,7 @@ module MethodCache
     def cache
       if @cache.nil?
         @cache = opts[:cache] || MethodCache.default_cache
-        @cache = Memcache.pool[@cache] if @cache.kind_of?(Symbol)
+        @cache = MethodCache.pool[@cache] if @cache.kind_of?(Symbol)
         if not @cache.respond_to?(:[]) and @cache.respond_to?(:get)
           @cache.metaclass.module_eval do
             define_method :[] do |key|
