@@ -137,13 +137,12 @@ module MethodCache
 
     def key
       if @key.nil?
-        arg_string = ([method_name, target] + args).collect do |arg|
+        @key = ([method_name, target] + args).collect do |arg|
           object_key(arg)
         end.join('|')
-        @key = [version, arg_string].compact.join('|')
         @key = Digest::SHA1.hexdigest(@key) if @key.length > 250
       end
-      "m#{MethodCache.version}|#{@key}"
+      "m#{version}|#{@key}"
     end
 
     def cached_at
