@@ -28,7 +28,7 @@ module MethodCache
     def invalidate
       if block_given?
         # Only invalidate if the block returns true.
-        value = cache[key]
+        value = cache.get(key)
         return if value and not yield(value)
       end
       cache.delete(key)
@@ -43,7 +43,7 @@ module MethodCache
     end
 
     def cached?
-      not cache[key].nil?
+      cache.get(key).present?
     end
 
     def update
@@ -115,13 +115,6 @@ module MethodCache
       if @cache.nil?
         @cache = opts[:cache] || MethodCache.default_cache
         @cache = MethodCache.pool[@cache] if @cache.kind_of?(Symbol)
-        if not @cache.respond_to?(:[]) and @cache.respond_to?(:get)
-          @cache.metaclass.module_eval do
-            define_method :[] do |key|
-              get(key)
-            end
-          end
-        end
       end
       @cache
     end
