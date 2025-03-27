@@ -1,8 +1,4 @@
 require File.dirname(__FILE__) + '/test_helper'
-require 'dalli'
-
-PORT    = 19112
-$client = Dalli::Client.new("localhost:#{PORT}")
 
 class FooBar
   extend MethodCache
@@ -13,11 +9,10 @@ class FooBar
   end
 end
 
-class MethodCacheRemoteTest < Test::Unit::TestCase
+class MethodCacheRemoteTest < MiniTest::Test
 
   should 'work with dalli client' do
-    start_memcache(PORT)
-    $client.flush
+    start_memcache
 
     f = FooBar.new
     assert_equal 'bar', f.foo

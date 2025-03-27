@@ -1,18 +1,30 @@
 require 'rubygems'
-require 'test/unit'
+require 'dalli'
+require 'minitest/autorun'
+require 'minitest/unit'
 require 'shoulda'
-require 'mocha/setup'
 require 'pp'
 
-$LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
-$LOAD_PATH.unshift File.dirname(__FILE__) + "/../../memcache/lib"
-$LOAD_PATH.unshift File.dirname(__FILE__) + "/../../cache_version/lib"
 require 'method_cache'
 
-class Test::Unit::TestCase
-  def start_memcache(port)
+PORT = 19112
+MethodCache.pool[:default] = MethodCache.default_cache
+MethodCache.pool[:remote]  = Dalli::Client.new("localhost:#{PORT}")
+
+class MiniTest::Test
+
+  def start_memcache(port=PORT)
+    return if File.exist?("/tmp/memcached_#{port}.pid")
+
     system("memcached -p #{port} -U 0 -d -P /tmp/memcached_#{port}.pid")
     sleep 1
+
+    at_exit do
+      system("kill -9 `cat /tmp/memcached_#{port}.pid`")
+      File.delete("/tmp/memcached_#{port}.pid")
+    end
+
     File.read("/tmp/memcached_#{port}.pid")
   end
+
 end

@@ -100,7 +100,7 @@ class C < B
   end
 end
 
-class TestMethodCache < Test::Unit::TestCase
+class TestMethodCache < MiniTest::Test
   should 'cache methods locally' do
     a = Foo.new
     f1 = a.foo(1)
@@ -174,6 +174,8 @@ class TestMethodCache < Test::Unit::TestCase
   end
 
   should 'cache methods remotely' do
+    start_memcache
+
     a = Foo.new
     b1 = a.baz(1)
     b2 = a.baz(2)
