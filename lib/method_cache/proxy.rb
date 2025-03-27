@@ -190,12 +190,13 @@ module MethodCache
       unless opts[:counter]
         value = value.nil? ? NULL : value
       end
+
       if cache.kind_of?(Hash)
         raise 'expiry not permitted when cache is a Hash'        if opts[:expiry]
         raise 'counter cache not permitted when cache is a Hash' if opts[:counter]
         cache[key] = value
       elsif opts[:counter]
-        cache.write(key, value.to_s, expiry(value))
+        cache.set(key, value, expiry(value), :raw => true)
       else
         cache.set(key, value, expiry(value))
       end
