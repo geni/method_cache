@@ -11,6 +11,13 @@ PORT = 19112
 MethodCache.pool[:default] = MethodCache.default_cache
 MethodCache.pool[:remote]  = Dalli::Client.new("localhost:#{PORT}")
 
+class Object
+  def tap_pp(*args)
+    pp [*args, self]
+    self
+  end
+end
+
 class MiniTest::Test
 
   def start_memcache(port=PORT)
