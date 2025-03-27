@@ -67,7 +67,7 @@ module MethodCache
 
       if value.nil?
         value = target.send(method_name_without_caching, *args)
-        raise "non-integer value returned by counter method" if opts[:counter] and not value.kind_of?(Fixnum)
+        raise 'non-integer value returned by counter method' if opts[:counter] && !value.is_a?(Numeric)
         write_to_cache(key, value) if valid?(:save, value)
       end
 
