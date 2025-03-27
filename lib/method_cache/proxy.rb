@@ -203,7 +203,14 @@ module MethodCache
 
     def read_from_cache(key)
       return if MethodCache.disabled?
-      opts[:counter] ? cache.count(key) : cache[key]
+
+      if cache.is_a?(Hash)
+        cache[key]
+      elsif opts[:counter]
+        cache.get(key)&.to_i
+      else
+        cache.get(key)
+      end
     end
 
     def increment(amount)

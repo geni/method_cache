@@ -18,9 +18,6 @@ module MethodCache
     end
     alias [] get
 
-    def count(key)
-      get(key).to_i
-    end
 
     def set(key, value, expiry)
       @cached_at[key]  = Time.now
@@ -37,7 +34,7 @@ module MethodCache
     end
 
     def incr(key, amount)
-      @data[key] = count(key) + amount
+      @data[key] = get(key).to_i + amount
     end
 
     def decr(key, amount)
