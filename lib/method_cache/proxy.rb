@@ -10,7 +10,6 @@ module MethodCache
     NULL = 'NULL'
 
     def initialize(method_name, opts)
-      opts[:cache] ||= :counters if opts[:counter]
       @method_name = method_name
       @opts        = opts
     end
