@@ -8,7 +8,7 @@ module MethodCache
 
   def cache_method(method_name, opts = {})
     method_name = method_name.to_sym
-    proxy = opts.kind_of?(Proxy) ? opts : Proxy.new(method_name, opts)
+    proxy       = opts.kind_of?(Proxy) ? opts : Proxy.new(method_name, opts)
 
     if self.class == Class
       return if instance_methods.include?(proxy.method_name_without_caching)
