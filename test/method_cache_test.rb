@@ -110,7 +110,7 @@ class TestMethodCache < MiniTest::Test
     assert_equal 3, f2
 
     assert_equal     f1, a.foo(1)
-    assert_not_equal f1, f2
+    assert_operator  f1, :!=, f2
     assert_equal     f2, a.foo(2)
 
     b = a.bar
@@ -135,7 +135,7 @@ class TestMethodCache < MiniTest::Test
 
     # expire and recalculate
     sleep TEST_EXPIRY
-    assert_not_equal t, a.pow(1)
+    assert t, a.pow(1)
   end
 
   should 'pass cached_at to load_validation' do
@@ -153,7 +153,7 @@ class TestMethodCache < MiniTest::Test
 
     # should now be invalidated
     a.bam_updated_at = Time.now + 100
-    assert_not_equal i, a.bam
+    assert_operator i, :!=, a.bam
   end
 
   should 'disable method_cache' do
@@ -168,9 +168,9 @@ class TestMethodCache < MiniTest::Test
       a.foo(1)
     end
 
-    assert f1 != f2
-    assert f1 != f3
-    assert f2 != f3
+    assert_operator f1, :!=, f2
+    assert_operator f1, :!=, f3
+    assert_operator f2, :!=, f3
   end
 
   should 'cache methods remotely' do
@@ -183,9 +183,9 @@ class TestMethodCache < MiniTest::Test
     assert_equal 1, b1
     assert_equal 3, b2
 
-    assert b1 == a.baz(1)
-    assert b1 != b2
-    assert b2 == a.baz(2)
+    assert_operator b1, :==, a.baz(1)
+    assert_operator b1, :!=, b2
+    assert_operator b2, :==, a.baz(2)
   end
 
   should 'cache class methods' do
@@ -223,7 +223,7 @@ class TestMethodCache < MiniTest::Test
     assert_equal 3, a.foo(2)
   end
 
-  should 'cache counters' do
+  should 'cache counters for instance methods' do
     b = Baz.new
 
     assert_equal 100, b.foo_count(:bar)
@@ -238,6 +238,24 @@ class TestMethodCache < MiniTest::Test
     b.increment_foo_count(:baz)
     assert_equal 101, b.foo_count(:baz)
     assert_equal 44,  b.foo_count(:bar) # make sure :bar wasn't affected
+  end
+
+  should 'cache counters for class methods' do
+    assert_equal 100, Baz.foo_count(:baz)
+
+    Baz.increment_foo_count(:baz, :by => 42)
+    assert_equal 142, Baz.foo_count(:baz)
+
+    Baz.decrement_foo_count(:baz, :by => 99)
+    assert_equal 43, Baz.foo_count(:baz)
+
+    Baz.increment_foo_count(:baz)
+    assert_equal 44, Baz.foo_count(:baz)
+    assert_equal 100, Baz.foo_count(:bar), 'bar should not be changed'
+
+    Baz.increment_foo_count(:baz)
+    assert_equal  45, Baz.foo_count(:baz)
+    assert_equal 100, Baz.foo_count(:bar), 'bar should not be changed'
 
     assert_equal 0, Foo.zap
     Foo.increment_zap(:by => 3)
