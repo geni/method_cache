@@ -1,7 +1,8 @@
+*~
 .bash_history
 .bundle
-pkg
-*~
-*.swp
+coverage/
 Gemfile.lock
-vendor
+notes.txt
+*.swp
+vendor/

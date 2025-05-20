@@ -5,6 +5,14 @@ require 'minitest/unit'
 require 'shoulda'
 require 'pp'
 
+unless defined?($SKIP_COVERAGE)
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter 'test'
+    add_filter 'vendor'
+  end
+end
+
 require 'method_cache'
 
 PORT = 19112

@@ -11,11 +11,6 @@ Gem::Specification.new do |gem|
   gem.homepage      = "https://github.com/geni/method_cache"
   gem.license       = 'MIT'
 
-  gem.add_development_dependency 'dalli'
-  gem.add_development_dependency 'method_source'
-  gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'shoulda'
-
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
