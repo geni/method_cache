@@ -5,7 +5,7 @@ gemspec
 group :development, :test do
   gem 'dalli'
   gem 'method_source' # for bin/test
-  gem 'minitest'
+  gem 'minitest', '~> 5.0'
   gem 'rake'
   gem 'shoulda'
   gem 'simplecov',  :require => false
