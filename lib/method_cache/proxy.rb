@@ -188,7 +188,7 @@ module MethodCache
         raise 'counter cache not permitted when cache is a Hash' if opts[:counter]
         cache[key] = value
       elsif opts[:counter]
-        cache.set(key, value, expiry(value), :raw => true)
+        cache.set(key, value.to_s, expiry(value), :raw => true)
       else
         cache.set(key, value, expiry(value))
       end
