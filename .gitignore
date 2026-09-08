@@ -6,3 +6,4 @@ Gemfile.lock
 notes.txt
 *.swp
 vendor/
+vendor
